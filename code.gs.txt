@@ -1,0 +1,81 @@
+function create_event() {
+  var calendar = CalendarApp.getDefaultCalendar();
+  
+  var data = get_data();
+  
+  var title = data[0];
+  var startTime = data[1];
+  var endTime = data[2];
+  var options = data[3];
+  
+  
+  calendar.createEvent(title, startTime, endTime, options);
+  
+}
+
+function get_data(){
+var form = FormApp.getActiveForm();
+var responses = form.getResponses();
+var response = responses[responses.length - 1];
+  
+ var email = response.getRespondentEmail();
+  
+  var items = response.getItemResponses();
+  var title = items[0].getResponse();
+  var description = items[1].getResponse();
+  var startTime = formatDateTime(items[2].getResponse());
+  var endTime = formatDateTime(items[3].getResponse());
+  
+  var options = {
+    sendInvites: true,
+    description: description,
+    guests: email
+  
+  };
+  
+  Logger.log([title, startTime, endTime, options]); 
+  return [title, startTime, endTime, options];  
+  
+}
+
+
+function formatDateTime(dateTime ){
+
+//var dateTime = "2019-02-13 16:00";
+var date = dateTime.split(" ")[0].split("-");
+var time = dateTime.split(" ")[1].split(":");
+
+
+var year = parseInt(date[0], 10);
+var month = parseInt(date[1], 10) - 1;
+var day = parseInt(date[2], 10);
+
+
+var hour = parseInt(time[0], 10);
+var minute = parseInt(time[1], 10);  
+var second = 0;
+var millisecond = 0;  
+  
+var new_date = new Date(year, month, day, hour, minute, second, millisecond); 
+Logger.log(new_date); 
+return new_date;  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
